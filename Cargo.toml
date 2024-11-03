@@ -1,0 +1,19 @@
+[package]
+name = "eHash"
+version = "0.0.1"
+edition = "2021"
+authors = ["Ethan Tuttle <tuttle.ethan@protonmail.com", "vnprc <email@email.com>"]
+description = "Blinded signatures for mining shares using Sv2"
+license = "MIT"
+repository = "https://github.com/EthnTuttle/eHash"
+
+[dependencies]
+serde = { version = "1.0.89", default-features = false, optional= true }
+binary_sv2 = "1.1.0"
+roles_logic_sv2 = "1.2.1"
+const_sv2 = "2.0.0"
+framing_sv2 = "^2.0.0"
+
+[features]
+no_std = []
+with_serde = ["binary_sv2/with_serde", "serde"]
