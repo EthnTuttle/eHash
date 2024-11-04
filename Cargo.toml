@@ -1,5 +1,5 @@
 [package]
-name = "eHash"
+name = "e_hash"
 version = "0.0.1"
 edition = "2021"
 authors = ["Ethan Tuttle <tuttle.ethan@protonmail.com", "vnprc <email@email.com>"]
