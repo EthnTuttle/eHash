@@ -1,7 +1,7 @@
 use binary_sv2::{decodable::{DecodableField, FieldMarker}, from_bytes, Deserialize, EncodableField, GetSize};
 use roles_logic_sv2::{parsers::IsSv2Message, Error};
 
-use crate::{r#const::{CHANNEL_BIT_EHASH_SHARE, CHANNEL_BIT_EHASH_SIGNATURE, MESSAGE_TYPE_EHASH_SHARE, MESSAGE_TYPE_EHASH_SIGNATURE}, EHashShare, EHashSignature};
+use crate::{r#const::{CHANNEL_BIT_EHASH_SHARE, CHANNEL_BIT_EHASH_SIGNATURE, MESSAGE_TYPE_EHASH_SHARE, MESSAGE_TYPE_EHASH_SIGNATURE}, messages::e_hash::{EHashShare, EHashSignature}};
 
 #[derive(Clone, Debug)]
 #[cfg_attr(feature = "with_serde", derive(Serialize, Deserialize))]
