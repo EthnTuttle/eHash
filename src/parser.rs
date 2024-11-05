@@ -1,5 +1,5 @@
-use binary_sv2::{decodable::{DecodableField, FieldMarker}, Deserialize, EncodableField, GetSize};
-use roles_logic_sv2::parsers::IsSv2Message;
+use binary_sv2::{decodable::{DecodableField, FieldMarker}, from_bytes, Deserialize, EncodableField, GetSize};
+use roles_logic_sv2::{parsers::IsSv2Message, Error};
 
 use crate::{r#const::{CHANNEL_BIT_EHASH_SHARE, CHANNEL_BIT_EHASH_SIGNATURE, MESSAGE_TYPE_EHASH_SHARE, MESSAGE_TYPE_EHASH_SIGNATURE}, EHashShare, EHashSignature};
 
@@ -67,3 +67,32 @@ pub enum EHashMessagesTypes {
     EHashSignature = MESSAGE_TYPE_EHASH_SIGNATURE
 }
 
+impl TryFrom<u8> for EHashMessagesTypes {
+    type Error = Error;
+
+    fn try_from(value: u8) -> Result<EHashMessagesTypes, Error> {
+        match value {
+            MESSAGE_TYPE_EHASH_SHARE => Ok(EHashMessagesTypes::EHashShare),
+            MESSAGE_TYPE_EHASH_SIGNATURE => Ok(EHashMessagesTypes::EHashSignature),
+            _ => Err(Error::UnexpectedMessage(value))
+        }
+    }
+}
+
+impl<'a> TryFrom<(u8, &'a mut [u8])> for EHashMessages<'a> {
+    type Error = Error;
+
+    fn try_from(value: (u8, &'a mut [u8])) -> Result<Self, Self::Error> {
+        let message_type: EHashMessagesTypes = value.0.try_into()?;
+        match message_type {
+            EHashMessagesTypes::EHashShare => {
+                let message: EHashShare<'a> = from_bytes(value.1)?;
+                Ok(EHashMessages::EHashShare(message))
+            }
+            EHashMessagesTypes::EHashSignature => {
+                let message: EHashSignature<'a> = from_bytes(value.1)?;
+                Ok(EHashMessages::EHashSignature(message))
+            }
+        }
+    }
+}
