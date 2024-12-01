@@ -13,20 +13,24 @@ use binary_sv2::{Deserialize, Serialize};
 #[cfg(not(feature = "with_serde"))]
 use core::convert::TryInto;
 
+/// This is the data type to be sent by a proxy to the pool.
+/// We don't want an explicit "Share" type since ASICs cannot create
+/// the blinded message part.
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq)]
 #[already_sized]
 #[repr(C)]
-pub struct Share<'decoder> {
-    pub nonce: u32,
-    pub ntime: u32,
-    pub version: u32,
+pub struct BlindedMessageShare<'decoder> {
     #[cfg_attr(feature = "with_serde", serde(borrow))]
     pub extranonce: B032<'decoder>,
     pub job_id: u64,
-    pub reference_job_id: u64,
-    pub share_index: u32,
-    #[cfg_attr(feature = "with_serde", serde(borrow))]
-    pub merkle_path: B064K<'decoder>,
+    pub nonce: u32,
+    pub ntime: u32,
+    pub version: u32,
+    // begin eHash data
+    pub amount: u64,
+    pub keyset_id: u64,
+    pub parity_bit: bool,
+    pub blinded_secret: PubKey<'decoder>,
 }
 
 impl<'a> Share<'a> {
